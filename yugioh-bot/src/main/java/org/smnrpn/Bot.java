@@ -8,7 +8,6 @@ public class Bot extends TelegramLongPollingBot {
     UsefulLinks usefulLinks = new UsefulLinks();
     RollDice rollDice = new RollDice();
     LifePointsCounter lifePointsCounter = new LifePointsCounter();
-
     CardDatabase cardDatabase = new CardDatabase();
 
     @Override
