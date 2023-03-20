@@ -31,7 +31,7 @@ Now you can:
 * Search inside the card database.
 * Keep count of the life points during the duel.
 * Roll a die to choose who go first.
-* Have a quick access to some of the most popular websites.
+* Have a quick access to some of the most popular Yu-Gi-Oh! websites.
 
 And many more features are coming!
 
@@ -57,9 +57,9 @@ Enjoy!
 The bot currently supports six commands:
 * /start - Shows  a welcome message with links to the official project page, this GitHub repository and Ko-Fi.
 * /help - Explains the commands and shows a button to report a bug.
-* /database - Search in the card database. The bot sends a messages with the card image and every info on the card.
+* /database - Search in the card database. The bot sends a message with the card image and every info on the card.
 * /roll - Rolls a die.
-* /lifepoints - Starts a life points counter. The user can modify the LP by typing "me", "op" or "both" followed by and space and a positive or negative number. 
+* /lifepoints - Starts a life points counter. The user can modify the LP by typing "me", "op" or "both" followed by a space and a positive or negative number. 
   
   e.g. "me -1500" reduces the user LP by 1500
 
