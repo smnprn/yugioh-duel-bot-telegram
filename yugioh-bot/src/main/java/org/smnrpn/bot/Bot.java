@@ -1,11 +1,17 @@
-package org.smnrpn;
+package org.smnrpn.bot;
 
+import org.smnrpn.database.CardDatabase;
+import org.smnrpn.global.GlobalCommands;
+import org.smnrpn.lifepoints.LifePointsCounter;
+import org.smnrpn.links.UsefulLinks;
+import org.smnrpn.roll.RollDice;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class Bot extends TelegramLongPollingBot {
     GlobalCommands globalCommands = new GlobalCommands();
     UsefulLinks usefulLinks = new UsefulLinks();
+    RollDice rollDice = new RollDice();
     LifePointsCounter lifePointsCounter = new LifePointsCounter();
     CardDatabase cardDatabase = new CardDatabase();
 

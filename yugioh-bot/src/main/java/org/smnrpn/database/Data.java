@@ -1,4 +1,6 @@
-package org.smnrpn;
+package org.smnrpn.database;
+
+import org.smnrpn.database.CardImages;
 
 public class Data {
     private int id;

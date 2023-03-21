@@ -3,7 +3,7 @@
  * More info at: https://yugioh.fandom.com/wiki/LP
  */
 
-package org.smnrpn;
+package org.smnrpn.lifepoints;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -24,7 +24,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
+        String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
         return TOKEN;
     }
 

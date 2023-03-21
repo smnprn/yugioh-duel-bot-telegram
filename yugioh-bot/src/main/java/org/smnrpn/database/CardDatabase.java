@@ -4,7 +4,7 @@
  * More info at: https://ygoprodeck.com/api-guide/
  */
 
-package org.smnrpn;
+package org.smnrpn.database;
 
 import com.google.gson.Gson;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -20,7 +20,6 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
 
 public class CardDatabase extends TelegramLongPollingBot {
     // This is the base Card Info endpoint. You can pass parameters to this endpoint to filter the info retrieved.
@@ -121,47 +120,23 @@ public class CardDatabase extends TelegramLongPollingBot {
     public void sendCardInfo(Long id) {
         String cardInfo;
 
-        String LINE_BREAK = "\n" + "\n";
+        CardInfo cardInfoMaker = new CardInfo(card);
 
         /*
          * Since different types of cards need to display different information
-         * the following if statements are used to distinguish between
+         * the following cases are used to distinguish between
          * link monsters, pendulum monsters, spell/traps and other monster cards.
          */
 
-        if (card.getType().equalsIgnoreCase("link monster")) {
-            cardInfo = "<b>Name:</b> " + card.getName() + "\n" +
-                        "<b>Attribute:</b> " + card.getAttribute() + "\n" +
-                        "<b>Link value:</b> " + card.getLinkVal() + "\n" +
-                        "<b>Link markers:</b> " + Arrays.toString(card.getLinkMarkers()) + "\n" +
-                        "<b>Atk:</b> " + card.getAtk() + LINE_BREAK +
-                        card.getRace() + " / " + card.getType() + LINE_BREAK +
-                        "<b>Card text:</b>" + "\n" +
-                        card.getDesc();
-        } else if (card.getType().matches("(?i:pendulum (effect|normal) monster)")) {
-            cardInfo = "<b>Name:</b> " + card.getName() + "\n" +
-                        "<b>Attribute:</b> " + card.getAttribute() + "\n" +
-                        "<b>Level:</b> " + card.getLevel() + "\n" +
-                        "<b>Scale:</b> " + card.getScale() + "\n" +
-                        "<b>Atk:</b> " + card.getAtk() + "\n" +
-                        "<b>Def:</b> " + card.getDef() + LINE_BREAK +
-                        card.getRace() + " / " + card.getType() + LINE_BREAK +
-                        "<b>Card text:</b>" + "\n" +
-                        card.getDesc();
-        } else if (card.getAttribute() == null) {   // If a card has no attribute is spell or a trap.
-            cardInfo = "<b>Name:</b> " + card.getName() + LINE_BREAK +
-                        card.getRace() + " " + card.getType() + LINE_BREAK +
-                        "<b>Card text:</b>" + "\n" +
-                        card.getDesc();
-        } else {
-            cardInfo = "<b>Name:</b> " + card.getName() + "\n" +
-                        "<b>Attribute:</b> " + card.getAttribute() + "\n" +
-                        "<b>Level:</b> " + card.getLevel() + "\n" +
-                        "<b>Atk:</b> " + card.getAtk() + "\n" +
-                        "<b>Def:</b> " + card.getDef() + LINE_BREAK +
-                        card.getRace() + " / " + card.getType() + LINE_BREAK +
-                        "<b>Card text:</b>" + "\n" +
-                        card.getDesc();
+        cardInfo = switch (card.getType()) {
+            case "Link Monster" -> cardInfoMaker.makeLink();
+            case "Pendulum Effect Monster", "Pendulum Normal Monster" -> cardInfoMaker.makePendulum();
+            default -> cardInfoMaker.makeMonster();
+        };
+
+        // If a card has no attribute is spell or a trap.
+        if (card.getAttribute() == null) {
+            cardInfo = cardInfoMaker.makeSpellTrap();
         }
 
         SendMessage sendCardMessage = new SendMessage();

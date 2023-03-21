@@ -2,7 +2,7 @@
  * This class implements a list of useful links for Yu-Gi-Oh! players.
  */
 
-package org.smnrpn;
+package org.smnrpn.links;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,7 +22,7 @@ public class UsefulLinks extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
+        String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
         return TOKEN;
     }
 

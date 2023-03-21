@@ -4,7 +4,7 @@
  */
 
 
-package org.smnrpn;
+package org.smnrpn.roll;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDice;

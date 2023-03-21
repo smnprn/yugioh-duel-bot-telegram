@@ -1,4 +1,4 @@
-package org.smnrpn;
+package org.smnrpn.database;
 
 /*
  * This class is used along the Data and CardImages class to retrieve the info
