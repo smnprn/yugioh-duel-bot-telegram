@@ -25,8 +25,7 @@ public class GlobalCommands extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
-        return TOKEN;
+        return System.getenv("YUGIOH_BOT_TOKEN");
     }
 
     @Override

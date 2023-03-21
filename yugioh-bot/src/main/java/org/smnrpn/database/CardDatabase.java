@@ -40,8 +40,7 @@ public class CardDatabase extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
-        return TOKEN;
+        return System.getenv("YUGIOH_BOT_TOKEN");
     }
 
     @Override
@@ -88,7 +87,7 @@ public class CardDatabase extends TelegramLongPollingBot {
                 try {
                     startSearch(id, ENDPOINT);
                 } catch (Exception e) {
-                    throw e;
+                    sendErrorMessage(id);
                 }
             }
         }
@@ -224,6 +223,21 @@ public class CardDatabase extends TelegramLongPollingBot {
         }
 
         return parameter.toString();
+    }
+
+    public void sendErrorMessage(Long id) {
+        String errorMessage = "Card not found! Make sure you searched the exact name on the card.";
+
+        SendMessage sendCardMessage = new SendMessage();
+        sendCardMessage.setChatId(id.toString());
+        sendCardMessage.setParseMode("html");
+        sendCardMessage.setText(errorMessage);
+
+        try {
+            execute(sendCardMessage);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
 }
