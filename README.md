@@ -31,7 +31,7 @@ Now you can:
 * Search inside the card database.
 * Keep count of the life points during the duel.
 * Roll a die to choose who go first.
-* Have a quick access to some of the most popular websites.
+* Have a quick access to some of the most popular Yu-Gi-Oh! websites.
 
 And many more features are coming!
 
