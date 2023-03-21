@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class Bot extends TelegramLongPollingBot {
     GlobalCommands globalCommands = new GlobalCommands();
     UsefulLinks usefulLinks = new UsefulLinks();
-    RollDice rollDice = new RollDice();
     LifePointsCounter lifePointsCounter = new LifePointsCounter();
     CardDatabase cardDatabase = new CardDatabase();
 

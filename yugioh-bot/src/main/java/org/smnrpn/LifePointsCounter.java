@@ -24,7 +24,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
+        return String TOKEN = System.getenv("YUGIOH_BOT_TOKEN");
         return TOKEN;
     }
 

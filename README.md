@@ -54,12 +54,13 @@ Enjoy!
 
 <!-- Usage -->
 ## Usage
+
 The bot currently supports six commands:
 * /start - Shows  a welcome message with links to the official project page, this GitHub repository and Ko-Fi.
 * /help - Explains the commands and shows a button to report a bug.
-* /database - Search in the card database. The bot sends a messages with the card image and every info on the card.
+* /database - Search in the card database. The bot sends a message with the card image and every info on the card.
 * /roll - Rolls a die.
-* /lifepoints - Starts a life points counter. The user can modify the LP by typing "me", "op" or "both" followed by and space and a positive or negative number. 
+* /lifepoints - Starts a life points counter. The user can modify the LP by typing "me", "op" or "both" followed by a space and a positive or negative number. 
   
   e.g. "me -1500" reduces the user LP by 1500
 
@@ -73,6 +74,7 @@ The bot currently supports six commands:
 ![Database Function Preview][database-image]
 
 </center>
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -88,7 +90,7 @@ The bot currently supports six commands:
 <!-- Contributing -->
 ## Contributing
 If you wish to contribute to the project <b>feel free to fork the repo and create a pull request</b>!\
-You can report a bug opening a "issue" here on GitHub.
+You can report a bug opening an "issue" here on GitHub.
 Any contribution you make is greatly appreciated.\
  <b>Thank you!</b>
 
@@ -123,4 +125,3 @@ If you wish, feel free to write me a message on GitHub!
 [telegram-logo]: https://img.shields.io/badge/Telegram_API-229ED9?style=for-the-badge&logo=telegram&logoColor=white
 [rest-api-logo]: https://img.shields.io/badge/REST_API-b53714?style=for-the-badge&logo=apache&logoColor=white
 [database-image]: images/database.jpg
-

@@ -138,17 +138,7 @@ public class CardDatabase extends TelegramLongPollingBot {
                         card.getRace() + " / " + card.getType() + LINE_BREAK +
                         "<b>Card text:</b>" + "\n" +
                         card.getDesc();
-        } else if (card.getType().equalsIgnoreCase("pendulum effect monster")) {
-            cardInfo = "<b>Name:</b> " + card.getName() + "\n" +
-                        "<b>Attribute:</b> " + card.getAttribute() + "\n" +
-                        "<b>Level:</b> " + card.getLevel() + "\n" +
-                        "<b>Scale:</b> " + card.getScale() + "\n" +
-                        "<b>Atk:</b> " + card.getAtk() + "\n" +
-                        "<b>Def:</b> " + card.getDef() + LINE_BREAK +
-                        card.getRace() + " / " + card.getType() + LINE_BREAK +
-                        "<b>Card text:</b>" + "\n" +
-                        card.getDesc();
-        } else if (card.getType().equalsIgnoreCase("pendulum normal monster")) {
+        } else if (card.getType().matches("(?i:pendulum (effect|normal) monster)")) {
             cardInfo = "<b>Name:</b> " + card.getName() + "\n" +
                         "<b>Attribute:</b> " + card.getAttribute() + "\n" +
                         "<b>Level:</b> " + card.getLevel() + "\n" +
@@ -247,6 +237,16 @@ public class CardDatabase extends TelegramLongPollingBot {
         }
 
         parameter.append(messageComponents[messageComponents.length - 1]);
+
+        /*
+         * Some cards contain double quotes in their name (e.g. Contact "C"),
+         * therefore it's necessary to replace those quotes with their percent-encoding equivalent (%22)
+         * in order to avoid a URISyntaxException.
+         */
+
+        if (parameter.toString().contains("\"")) {
+            return parameter.toString().replace("\"", "%22");
+        }
 
         return parameter.toString();
     }
