@@ -39,7 +39,7 @@ public class UsefulLinks extends TelegramLongPollingBot {
     }
 
     public void sendLinksMessage(Long id) {
-        String LINE_BREAK = "\n" + "\n";
+        String LINE_BREAK = "\n\n";
 
         String startMessage = "Here's a list of useful links:" + LINE_BREAK +
                 "<b>Yu-Gi-Oh! Card Database</b>\n" + "<i>The official Yu-Gi-Oh! card database by Konami</i>\n" +

@@ -14,24 +14,23 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class CardDatabase extends TelegramLongPollingBot {
-    // This is the base Card Info endpoint. You can pass parameters to this endpoint to filter the info retrieved.
-    private final String CARD_INFO_ENDPOINT = "https://db.ygoprodeck.com/api/v7/cardinfo.php";
+    private String ENDPOINT;  // This is the actual endpoint used to retrieve data.
+    private Card card;
+    private int checkCommand = 0;  // This variable check if the user called the /database command.
 
-    // This is the actual endpoint used to retrieve data.
-    String ENDPOINT;
-
-    // This variable check if the user called the /database command.
-    private int checkCommand = 0;
-
-    Card card;
+    PostgresDBHandler database = new PostgresDBHandler();
 
     @Override
     public String getBotUsername() {
@@ -66,7 +65,7 @@ public class CardDatabase extends TelegramLongPollingBot {
             }
         }
 
-        // Split the card name the user typed in order to build the endpoint URL.
+        // Split the card name the user previously typed in order to build the endpoint URL.
         String[] messageComponents = message.getText().split(" ");
 
         /*
@@ -77,6 +76,9 @@ public class CardDatabase extends TelegramLongPollingBot {
          */
 
         if (!message.isCommand() && checkCommand == 1) {
+            // This is the base Card Info endpoint. You can pass parameters to this endpoint to filter the info retrieved.
+            String CARD_INFO_ENDPOINT = "https://db.ygoprodeck.com/api/v7/cardinfo.php";
+
             if (messageComponents.length == 1) {
                 ENDPOINT = CARD_INFO_ENDPOINT + "?name=" + messageComponents[0];
             } else {
@@ -88,6 +90,7 @@ public class CardDatabase extends TelegramLongPollingBot {
                     startSearch(id, ENDPOINT);
                 } catch (Exception e) {
                     sendErrorMessage(id);
+                    e.printStackTrace();
                 }
             }
         }
@@ -129,7 +132,12 @@ public class CardDatabase extends TelegramLongPollingBot {
 
         cardInfo = switch (card.getType()) {
             case "Link Monster" -> cardInfoMaker.makeLink();
-            case "Pendulum Effect Monster", "Pendulum Normal Monster" -> cardInfoMaker.makePendulum();
+            case "Pendulum Effect Monster",
+                 "Pendulum Normal Monster",
+                 "Pendulum Effect Ritual Monster",
+                 "Pendulum Flip Effect Monster",
+                 "Pendulum Tuner Effect Monster",
+                 "Pendulum Effect Fusion Monster" -> cardInfoMaker.makePendulum();
             default -> cardInfoMaker.makeMonster();
         };
 
@@ -146,7 +154,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardMessage);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -155,8 +163,10 @@ public class CardDatabase extends TelegramLongPollingBot {
      * to send the card image to the user.
      */
     public void sendCardImage(Long id) throws IOException {
+        File imageFile = new File(database.getImagePath(card.getId()));
+
         InputFile cardImage = new InputFile();
-        cardImage.setMedia(card.getImage_url_cropped());
+        cardImage.setMedia(imageFile);
 
         SendPhoto sendCardImage = new SendPhoto();
         sendCardImage.setChatId(id.toString());
@@ -165,14 +175,26 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardImage);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
     public void startSearch(Long id, String endpoint) {
         try {
             httpRequest(endpoint);
-            sendCardImage(id);
+
+            /*
+             * If a card is already present in the database send the card image to the user,
+             * otherwise download the image, add it to the database and then send it.
+             */
+            if (database.isPresent(card.getId())) {
+                sendCardImage(id);
+            } else {
+                downloadImg();
+                database.addCard(card.getId(), card.getName(), "yugioh-bot/assets/" + card.getId() + ".jpg");
+                sendCardImage(id);
+            }
+
             sendCardInfo(id);
         } catch (URISyntaxException | InterruptedException | IOException e) {
             throw new RuntimeException(e);
@@ -193,7 +215,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendSearchInstructions);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -236,8 +258,19 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardMessage);
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error in CardDatabase.sendCardMessage()");
         }
     }
 
+    public void downloadImg() {
+        try {
+            URL url = new URL(card.getImage_url_cropped());
+            BufferedImage image = ImageIO.read(url);
+            File file = new File("yugioh-bot/assets/" + card.getId() + ".jpg");
+
+            ImageIO.write(image, "jpg", file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

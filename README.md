@@ -40,6 +40,7 @@ And many more features are coming!
 * ![Java][java-logo]
 * ![Telegram][telegram-logo]
 * ![REST API][rest-api-logo]
+* ![PostgreSQL][postgres-logo]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -80,10 +81,10 @@ The bot currently supports six commands:
 
 <!-- Roadmap -->
 ## Roadmap
-- [ ] Keep the bot online 24/7
+- [ ] Host the bot
 - [x] Add a life points counter
 - [x] Add a search card function
-- [ ] Add a deck builder
+- [ ] Add card prices
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -125,3 +126,4 @@ If you wish, feel free to write me a message on GitHub!
 [telegram-logo]: https://img.shields.io/badge/Telegram_API-229ED9?style=for-the-badge&logo=telegram&logoColor=white
 [rest-api-logo]: https://img.shields.io/badge/REST_API-b53714?style=for-the-badge&logo=apache&logoColor=white
 [database-image]: images/database.jpg
+[postgres-logo]: https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white

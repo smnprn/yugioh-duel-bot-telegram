@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GlobalCommands extends TelegramLongPollingBot {
-    String LINE_BREAK = "\n" + "\n";
+    private final String LINE_BREAK = "\n\n";
 
     @Override
     public String getBotUsername() {

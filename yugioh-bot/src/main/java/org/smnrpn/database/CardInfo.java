@@ -1,14 +1,12 @@
 package org.smnrpn.database;
 
-import org.smnrpn.database.Card;
-
 import java.util.Arrays;
 
 public class CardInfo {
-    private Card card;
+    private final Card card;
     private String cardInfo;
 
-    private final String LINE_BREAK = "\n" + "\n";
+    private final String LINE_BREAK = "\n\n";
 
     public CardInfo(Card card) {
         this.card = card;

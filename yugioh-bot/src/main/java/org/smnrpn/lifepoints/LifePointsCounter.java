@@ -66,7 +66,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
                  */
 
                 try {
-                    int value = Integer.valueOf(messageComponents[1]);
+                    int value = Integer.parseInt(messageComponents[1]);
                     updateLP(value, messageComponents);
                 } catch (Exception e) {
                     if (message.isCommand()) {
