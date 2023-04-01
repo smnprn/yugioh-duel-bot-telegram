@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import redis.clients.jedis.JedisPooled;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -26,11 +27,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class CardDatabase extends TelegramLongPollingBot {
-    private String ENDPOINT;  // This is the actual endpoint used to retrieve data.
     private Card card;
-    private int checkCommand = 0;  // This variable check if the user called the /database command.
 
-    PostgresDBHandler database = new PostgresDBHandler();
+    private ImagesDBHandler database = new ImagesDBHandler();
+    private JedisPooled checkDatabaseCommand = new JedisPooled("localhost", 6379);
+    //private Map<String, String> checkCommand = new HashMap<>();
 
     @Override
     public String getBotUsername() {
@@ -56,12 +57,14 @@ public class CardDatabase extends TelegramLongPollingBot {
 
         if (message.isCommand()) {
             if (message.getText().equals("/database")) {
-                sendSearchInstructions(id);
-                checkCommand = 1;
+                sendInstructions(id);
+                //checkCommand.put(id, true);
+                checkDatabaseCommand.hset("checkDatabaseCommand", id.toString(), "true");
             }
 
             if (!message.getText().equals("/database")) {
-                checkCommand = 0;
+                //checkCommand.put(id, false);
+                checkDatabaseCommand.hset("checkDatabaseCommand", id.toString(), "false");
             }
         }
 
@@ -75,9 +78,13 @@ public class CardDatabase extends TelegramLongPollingBot {
          * 2) If the card name has more than a word the parameterGenerator() method is needed.
          */
 
-        if (!message.isCommand() && checkCommand == 1) {
+        //if (!message.isCommand() && checkCommand.get(id))
+        if (!message.isCommand() && checkDatabaseCommand.hget("checkDatabaseCommand", id.toString()).equals("true")) {
             // This is the base Card Info endpoint. You can pass parameters to this endpoint to filter the info retrieved.
             String CARD_INFO_ENDPOINT = "https://db.ygoprodeck.com/api/v7/cardinfo.php";
+
+            // This is the actual endpoint used to retrieve data.
+            String ENDPOINT;
 
             if (messageComponents.length == 1) {
                 ENDPOINT = CARD_INFO_ENDPOINT + "?name=" + messageComponents[0];
@@ -89,17 +96,13 @@ public class CardDatabase extends TelegramLongPollingBot {
                 try {
                     startSearch(id, ENDPOINT);
                 } catch (Exception e) {
-                    sendErrorMessage(id);
                     e.printStackTrace();
                 }
             }
         }
     }
 
-    /*
-     * This method sends a GET request to the endpoint and retrieves the information
-     * inside the JSON file sent as response.
-     */
+
     public void httpRequest(String ENDPOINT) throws URISyntaxException, IOException, InterruptedException {
         Gson gson = new Gson();
 
@@ -115,10 +118,6 @@ public class CardDatabase extends TelegramLongPollingBot {
         card = gson.fromJson(getResponse.body(), Card.class);
     }
 
-    /*
-     * This method is used inside the startSearch() method to build and send a message
-     * to the user with the card info retrieved.
-     */
     public void sendCardInfo(Long id) {
         String cardInfo;
 
@@ -154,15 +153,11 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardMessage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
-    /*
-     * This method is used inside the startSearch() method
-     * to send the card image to the user.
-     */
-    public void sendCardImage(Long id) throws IOException {
+    public void sendCardImage(Long id) {
         File imageFile = new File(database.getImagePath(card.getId()));
 
         InputFile cardImage = new InputFile();
@@ -175,7 +170,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardImage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -187,6 +182,7 @@ public class CardDatabase extends TelegramLongPollingBot {
              * If a card is already present in the database send the card image to the user,
              * otherwise download the image, add it to the database and then send it.
              */
+
             if (database.isPresent(card.getId())) {
                 sendCardImage(id);
             } else {
@@ -196,8 +192,9 @@ public class CardDatabase extends TelegramLongPollingBot {
             }
 
             sendCardInfo(id);
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            sendErrorMessage(id);
+            e.printStackTrace();
         }
     }
 
@@ -205,7 +202,7 @@ public class CardDatabase extends TelegramLongPollingBot {
      * This method is used to send a message with the search instructions
      * when the user uses /database.
      */
-    public void sendSearchInstructions(Long id) {
+    public void sendInstructions(Long id) {
         String searchInstructions = "Type a card name to search through the database (the name must be exact):";
 
         SendMessage sendSearchInstructions = new SendMessage();
@@ -215,7 +212,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendSearchInstructions);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -235,7 +232,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         parameter.append(messageComponents[messageComponents.length - 1]);
 
         /*
-         * Some cards contain double quotes in their name (e.g. Contact "C"),
+         * Some cards contain double quotes in their name (e.g. Maxx "C"),
          * therefore it's necessary to replace those quotes with their percent-encoding equivalent (%22)
          * in order to avoid a URISyntaxException.
          */
@@ -258,7 +255,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardMessage);
         } catch (Exception e) {
-            System.out.println("Error in CardDatabase.sendCardMessage()");
+            e.printStackTrace();
         }
     }
 

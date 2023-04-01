@@ -41,6 +41,7 @@ And many more features are coming!
 * ![Telegram][telegram-logo]
 * ![REST API][rest-api-logo]
 * ![PostgreSQL][postgres-logo]
+* ![Redis][redis-logo]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -59,7 +60,7 @@ Enjoy!
 The bot currently supports six commands:
 * /start - Shows  a welcome message with links to the official project page, this GitHub repository and Ko-Fi.
 * /help - Explains the commands and shows a button to report a bug.
-* /database - Search in the card database. The bot sends a message with the card image and every info on the card.
+* /database - Searches in the card database. The bot sends a message with the card image and every info on the card.
 * /roll - Rolls a die.
 * /lifepoints - Starts a life points counter. The user can modify the LP by typing "me", "op" or "both" followed by a space and a positive or negative number. 
   
@@ -123,7 +124,8 @@ If you wish, feel free to write me a message on GitHub!
 [preview-image]: images/preview.png
 [java-logo]: https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=coffeescript&logoColor=white
 [java-url]: www.java.com
-[telegram-logo]: https://img.shields.io/badge/Telegram_API-229ED9?style=for-the-badge&logo=telegram&logoColor=white
-[rest-api-logo]: https://img.shields.io/badge/REST_API-b53714?style=for-the-badge&logo=apache&logoColor=white
+[telegram-logo]: https://img.shields.io/badge/Telegram_API-26A5E4?style=for-the-badge&logo=telegram&logoColor=white
+[rest-api-logo]: https://img.shields.io/badge/REST_API-D22128?style=for-the-badge&logo=apache&logoColor=white
 [database-image]: images/database.jpg
 [postgres-logo]: https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white
+[redis-logo]: https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white

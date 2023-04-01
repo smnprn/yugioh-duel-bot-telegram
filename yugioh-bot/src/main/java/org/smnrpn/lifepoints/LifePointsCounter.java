@@ -9,13 +9,14 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import redis.clients.jedis.JedisPooled;
 
 public class LifePointsCounter extends TelegramLongPollingBot {
-    private int userLP = 8000;
-    private int opponentLP = 8000;
+    private LifePointsDBHandler lifePointsHandler = new LifePointsDBHandler();
 
-    private int timesCounterDisplayed = 0; // Counts how many times the LP are displayed
-    private int checkCommand = 0;  // Checks if the /lifepoints command was already called
+    private JedisPooled checkLPCommand = new JedisPooled("localhost", 6379);
+    private JedisPooled timesCounterDisplayed = new JedisPooled("localhost", 6379);
+
 
     @Override
     public String getBotUsername() {
@@ -35,7 +36,15 @@ public class LifePointsCounter extends TelegramLongPollingBot {
 
         if (message.isCommand()) {
             if (message.getText().equals("/lifepoints")) {
-                checkCommand = 1;
+                checkLPCommand.hset("checkLPCommand", id.toString(), "true");
+                timesCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
+
+                if (!lifePointsHandler.isPresent(id)) {
+                    lifePointsHandler.addUser(id);
+                } else {
+                    lifePointsHandler.setUserLP(id, 8000);
+                    lifePointsHandler.setOpponentLP(id, 8000);
+                }
             }
 
             /*
@@ -44,7 +53,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
              */
 
             if (!message.getText().equals("/lifepoints")) {
-                resetCounter();
+                resetCounter(id);
             }
         }
 
@@ -56,8 +65,8 @@ public class LifePointsCounter extends TelegramLongPollingBot {
 
         String[] messageComponents = message.getText().split(" ");
 
-        if (checkCommand == 1) {                // If the user used /lifepoints...
-            if (timesCounterDisplayed  > 0) {   //...and the LP counter was already displayed at least once
+        if (checkLPCommand.hget("checkLPCommand", id.toString()).equals("true")) {                     // If the user used /lifepoints...
+            if (timesCounterDisplayed.hget("timesCounterDisplayed", id.toString()).equals("true")) {   //...and the LP counter was already displayed at least once
 
                 /*
                  * There's a chance the user won't input a valid command,
@@ -67,19 +76,16 @@ public class LifePointsCounter extends TelegramLongPollingBot {
 
                 try {
                     int value = Integer.parseInt(messageComponents[1]);
-                    updateLP(value, messageComponents);
+                    updateLP(id, value, messageComponents);
                 } catch (Exception e) {
-                    if (message.isCommand()) {
-                        System.out.println("New game");
-                    } else {
-                        sendErrorMessage(id);
-                    }
+                    sendErrorMessage(id);
+                    e.printStackTrace();
                 }
 
             }
 
             displayLP(id);
-            timesCounterDisplayed++;
+            timesCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "true");
         }
     }
 
@@ -87,102 +93,102 @@ public class LifePointsCounter extends TelegramLongPollingBot {
     public void displayLP(Long id) {
         SendMessage sendMessage = new SendMessage();
 
-        String printLP = "Your LP: " + userLP + "\n"
-                       + "Opponent LP: " + opponentLP + "\n" + "\n";
+        String printLP = "Your LP: " + lifePointsHandler.getUserLP(id) + "\n"
+                       + "Opponent LP: " + lifePointsHandler.getOpponentLP(id) + "\n" + "\n";
 
-        if (userLP > 0 && opponentLP > 0) {
+        if (lifePointsHandler.getUserLP(id) > 0 && lifePointsHandler.getOpponentLP(id) > 0) {
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP);
-        } else if (userLP == 0 && opponentLP > 0) {
+        } else if (lifePointsHandler.getUserLP(id) == 0 && lifePointsHandler.getOpponentLP(id) > 0) {
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "Your opponent wins the duel!");
 
-            resetCounter();
-        } else if (opponentLP == 0 && userLP > 0) {
+            resetCounter(id);
+        } else if (lifePointsHandler.getOpponentLP(id) == 0 && lifePointsHandler.getUserLP(id) > 0) {
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "You win the duel!");
 
-            resetCounter();
-        } else if (userLP == 0 && opponentLP == 0){
+            resetCounter(id);
+        } else if (lifePointsHandler.getUserLP(id) == 0 && lifePointsHandler.getOpponentLP(id) == 0){
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "The duel is a tie");
 
-            resetCounter();
-        } else if (userLP < 0 && opponentLP > 0) {
-            userLP = 0;
-            printLP = "Your LP: " + userLP + "\n"
-                    + "Opponent LP: " + opponentLP + "\n" + "\n";
+            resetCounter(id);
+        } else if (lifePointsHandler.getUserLP(id) < 0 && lifePointsHandler.getOpponentLP(id) > 0) {
+            lifePointsHandler.setUserLP(id, 0);
+            printLP = "Your LP: " + lifePointsHandler.getUserLP(id) + "\n"
+                    + "Opponent LP: " + lifePointsHandler.getOpponentLP(id) + "\n" + "\n";
 
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "Your opponent wins the duel!");
 
-            resetCounter();
-        } else if (userLP < 0 && opponentLP == 0) {
-            userLP = 0;
-            printLP = "Your LP: " + userLP + "\n"
-                    + "Opponent LP: " + opponentLP + "\n" + "\n";
+            resetCounter(id);
+        } else if (lifePointsHandler.getUserLP(id) < 0 && lifePointsHandler.getOpponentLP(id) == 0) {
+            lifePointsHandler.setUserLP(id, 0);
+            printLP = "Your LP: " + lifePointsHandler.getUserLP(id) + "\n"
+                    + "Opponent LP: " + lifePointsHandler.getOpponentLP(id) + "\n" + "\n";
 
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "The duel is tie!");
 
-            resetCounter();
-        } else if (userLP > 0 && opponentLP < 0) {
-            opponentLP = 0;
-            printLP = "Your LP: " + userLP + "\n"
-                    + "Opponent LP: " + opponentLP + "\n" + "\n";
+            resetCounter(id);
+        } else if (lifePointsHandler.getUserLP(id) > 0 && lifePointsHandler.getOpponentLP(id) < 0) {
+            lifePointsHandler.setOpponentLP(id, 0);
+            printLP = "Your LP: " + lifePointsHandler.getUserLP(id) + "\n"
+                    + "Opponent LP: " + lifePointsHandler.getOpponentLP(id) + "\n" + "\n";
 
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "You win the duel!");
 
-            resetCounter();
-        } else if (userLP == 0 && opponentLP < 0) {
-            opponentLP = 0;
-            printLP = "Your LP: " + userLP + "\n"
-                    + "Opponent LP: " + opponentLP + "\n" + "\n";
+            resetCounter(id);
+        } else if (lifePointsHandler.getUserLP(id) == 0 && lifePointsHandler.getOpponentLP(id) < 0) {
+            lifePointsHandler.setOpponentLP(id, 0);
+            printLP = "Your LP: " + lifePointsHandler.getUserLP(id) + "\n"
+                    + "Opponent LP: " + lifePointsHandler.getOpponentLP(id) + "\n" + "\n";
 
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "The duel is tie!");
 
-            resetCounter();
-        } else if (userLP < 0 && opponentLP < 0) {
-            userLP = 0;
-            opponentLP = 0;
-            printLP = "Your LP: " + userLP + "\n"
-                    + "Opponent LP: " + opponentLP + "\n" + "\n";
+            resetCounter(id);
+        } else if (lifePointsHandler.getUserLP(id) < 0 && lifePointsHandler.getOpponentLP(id) < 0) {
+            lifePointsHandler.setUserLP(id, 0);
+            lifePointsHandler.setOpponentLP(id, 0);
+            printLP = "Your LP: " + lifePointsHandler.getUserLP(id) + "\n"
+                    + "Opponent LP: " + lifePointsHandler.getOpponentLP(id) + "\n" + "\n";
 
             sendMessage.setChatId(id.toString());
             sendMessage.setText(printLP + "The duel is tie!");
 
-            resetCounter();
+            resetCounter(id);
         }
 
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
-    public void updateLP(int variation, String[] playerAndValue) {
+    public void updateLP(Long id, int variation, String[] playerAndValue) {
         if (playerAndValue[0].equalsIgnoreCase("me")) {
-            userLP += variation;
+            lifePointsHandler.updateUserLP(id, variation);
         }
 
         if (playerAndValue[0].equalsIgnoreCase("op")) {
-            opponentLP += variation;
+            lifePointsHandler.updateOpponentLP(id, variation);
         }
 
         if (playerAndValue[0].equalsIgnoreCase("both")) {
-            userLP += variation;
-            opponentLP += variation;
+            lifePointsHandler.updateUserLP(id, variation);
+            lifePointsHandler.updateOpponentLP(id, variation);
         }
     }
 
-    public void resetCounter() {
-        checkCommand = 0;
-        timesCounterDisplayed = 0;
-        userLP = 8000;
-        opponentLP = 8000;
+    public void resetCounter(Long id) {
+        checkLPCommand.hset("checkLPCommand", id.toString(), "false");
+        timesCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
+        lifePointsHandler.setUserLP(id, 8000);
+        lifePointsHandler.setOpponentLP(id, 8000);
     }
 
     public void sendErrorMessage(Long id) {
@@ -192,7 +198,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
         try {
             execute(sendErrorMessage);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

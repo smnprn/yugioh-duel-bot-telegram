@@ -6,25 +6,11 @@
 
 package org.smnrpn.database;
 
+import org.smnrpn.DBHandler;
+
 import java.sql.*;
 
-public class PostgresDBHandler {
-    private final String URL = System.getenv("CARD_DB_URL");
-    private final String USER = System.getenv("CARD_DB_USER");
-    private final String PASSWORD = System.getenv("CARD_DB_PASSWORD");
-
-    public Connection connect() {
-        Connection connection = null;
-
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return connection;
-    }
-
+public class ImagesDBHandler extends DBHandler {
     // This method checks if a card is already present in the database.
     public boolean isPresent(int cardId) {
         try {

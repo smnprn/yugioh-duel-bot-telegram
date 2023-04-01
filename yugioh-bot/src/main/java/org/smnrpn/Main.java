@@ -11,7 +11,6 @@
 package org.smnrpn;
 
 import org.smnrpn.bot.Bot;
-import org.smnrpn.database.PostgresDBHandler;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
