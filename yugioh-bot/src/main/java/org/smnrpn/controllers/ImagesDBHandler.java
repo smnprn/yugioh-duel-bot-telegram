@@ -4,14 +4,13 @@
  * and add card id, name and image path to a PostgreSQL database.
  */
 
-package org.smnrpn.database;
+package org.smnrpn.controllers;
 
-import org.smnrpn.DBHandler;
+import org.smnrpn.controllers.DBHandler;
 
 import java.sql.*;
 
 public class ImagesDBHandler extends DBHandler {
-    // This method checks if a card is already present in the database.
     public boolean isPresent(int cardId) {
         try {
             Statement statement = connect().createStatement();

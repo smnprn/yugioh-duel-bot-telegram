@@ -1,5 +1,7 @@
 package org.smnrpn.database;
 
+import org.smnrpn.cards.Card;
+
 import java.util.Arrays;
 
 public class CardInfo {

@@ -8,7 +8,7 @@
  * More info at: https://en.wikipedia.org/wiki/Yu-Gi-Oh!_Trading_Card_Game
  */
 
-package org.smnrpn;
+package org.smnrpn.main;
 
 import org.smnrpn.bot.Bot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;

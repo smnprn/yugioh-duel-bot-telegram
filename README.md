@@ -29,9 +29,10 @@ There are many useful apps and websites that help duelists, but they always requ
 
 Now you can:
 * Search inside the card database.
+* Search card prices.
 * Keep count of the life points during the duel.
 * Roll a die to choose who go first.
-* Have a quick access to some of the most popular websites.
+* Have quick access to some of the most popular websites.
 
 And many more features are coming!
 
@@ -57,10 +58,11 @@ Enjoy!
 <!-- Usage -->
 ## Usage
 
-The bot currently supports six commands:
+The bot currently supports seven commands:
 * /start - Shows  a welcome message with links to the official project page, this GitHub repository and Ko-Fi.
 * /help - Explains the commands and shows a button to report a bug.
 * /database - Searches in the card database. The bot sends a message with the card image and every info on the card.
+* /prices - Searches card prices on TCGPlayer and other marketplaces.
 * /roll - Rolls a die.
 * /lifepoints - Starts a life points counter. The user can modify the LP by typing "me", "op" or "both" followed by a space and a positive or negative number. 
   
@@ -85,7 +87,7 @@ The bot currently supports six commands:
 - [ ] Host the bot
 - [x] Add a life points counter
 - [x] Add a search card function
-- [ ] Add card prices
+- [x] Add card prices
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

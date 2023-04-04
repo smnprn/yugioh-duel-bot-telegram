@@ -1,6 +1,6 @@
-package org.smnrpn.lifepoints;
+package org.smnrpn.controllers;
 
-import org.smnrpn.DBHandler;
+import org.smnrpn.controllers.DBHandler;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

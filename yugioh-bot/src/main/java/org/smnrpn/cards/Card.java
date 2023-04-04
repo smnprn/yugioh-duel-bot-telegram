@@ -1,11 +1,13 @@
-package org.smnrpn.database;
+package org.smnrpn.cards;
 
 /*
- * This class is used along the Data and CardImages class to retrieve the info
- * from the JSON file sent by the Http request.
+ * This class is used along the Data and the other classes in this package
+ * to retrieve the information from the JSON file sent by the Http request.
  * The variables inside these classes represent the inner structure of the file:
- * data[id = ..., name = ..., (other variables inside the Data class), card_images[image_url, image_url_small, image_url_cropped]]
+ * data[id = ..., name = ..., (other variables inside the Data class), card_images[image_url, image_url_small, image_url_cropped] ...]
  */
+
+import java.util.ArrayList;
 
 public class Card {
     private Data[] data;
@@ -62,5 +64,41 @@ public class Card {
 
     public int getScale() {
         return data[0].getScale();
+    }
+
+    public float getCardmarketPrices() {
+        return data[0].getCardmarketPrice();
+    }
+
+    public float getTCGPlayerPrices() {
+        return data[0].getTCGPlayerPrice();
+    }
+
+    public float getEbayPrices() {
+        return data[0].getEbayPrice();
+    }
+
+    public float getAmazonPrices() {
+        return data[0].getAmazonPrice();
+    }
+
+    public float getCoolstuffPrices() {
+        return data[0].getCoolstuffPrice();
+    }
+
+    public ArrayList<String> getSetNames() {
+        return data[0].getSetNames();
+    }
+
+    public ArrayList<String> getSetCodes() {
+        return data[0].getSetCodes();
+    }
+
+    public ArrayList<String> getSetRarities() {
+        return data[0].getSetRarities();
+    }
+
+    public ArrayList<Float> getSetPrices() {
+        return data[0].getSetPrices();
     }
 }

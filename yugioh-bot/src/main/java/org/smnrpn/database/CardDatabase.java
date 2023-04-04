@@ -6,7 +6,9 @@
 
 package org.smnrpn.database;
 
-import com.google.gson.Gson;
+import org.smnrpn.cards.Card;
+import org.smnrpn.controllers.HTTPHandler;
+import org.smnrpn.controllers.ImagesDBHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -18,20 +20,14 @@ import redis.clients.jedis.JedisPooled;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 public class CardDatabase extends TelegramLongPollingBot {
     private Card card;
 
+    private HTTPHandler httpHandler = new HTTPHandler();
     private ImagesDBHandler database = new ImagesDBHandler();
     private JedisPooled checkDatabaseCommand = new JedisPooled("localhost", 6379);
-    //private Map<String, String> checkCommand = new HashMap<>();
 
     @Override
     public String getBotUsername() {
@@ -51,19 +47,17 @@ public class CardDatabase extends TelegramLongPollingBot {
 
         /*
          * If the user writes a command and the command is /database,
-         * the variable checkCommand is set to 1 and the code below is executed.
-         * Otherwise, checkCommand is set again to 0 and nothing happens.
+         * the variable checkCommand is set to true and the code below is executed.
+         * Otherwise, checkCommand is set to false and nothing happens.
          */
 
         if (message.isCommand()) {
             if (message.getText().equals("/database")) {
                 sendInstructions(id);
-                //checkCommand.put(id, true);
                 checkDatabaseCommand.hset("checkDatabaseCommand", id.toString(), "true");
             }
 
             if (!message.getText().equals("/database")) {
-                //checkCommand.put(id, false);
                 checkDatabaseCommand.hset("checkDatabaseCommand", id.toString(), "false");
             }
         }
@@ -74,48 +68,17 @@ public class CardDatabase extends TelegramLongPollingBot {
         /*
          * If the /database command was previously used and the user did not use any other command
          * the endpoint URL is built.
-         * 1) If the card name is just one word the URL is https://db.ygoprodeck.com/api/v7/cardinfo.php?name=MONSTER_NAME
-         * 2) If the card name has more than a word the parameterGenerator() method is needed.
          */
 
-        //if (!message.isCommand() && checkCommand.get(id))
         if (!message.isCommand() && checkDatabaseCommand.hget("checkDatabaseCommand", id.toString()).equals("true")) {
-            // This is the base Card Info endpoint. You can pass parameters to this endpoint to filter the info retrieved.
-            String CARD_INFO_ENDPOINT = "https://db.ygoprodeck.com/api/v7/cardinfo.php";
+            httpHandler.createEndpoint(messageComponents);
 
-            // This is the actual endpoint used to retrieve data.
-            String ENDPOINT;
-
-            if (messageComponents.length == 1) {
-                ENDPOINT = CARD_INFO_ENDPOINT + "?name=" + messageComponents[0];
-            } else {
-                ENDPOINT = CARD_INFO_ENDPOINT + "?name=" + parameterGenerator(messageComponents);
-            }
-
-            if (!message.getText().isEmpty()) {
-                try {
-                    startSearch(id, ENDPOINT);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                startSearch(id);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-    }
-
-
-    public void httpRequest(String ENDPOINT) throws URISyntaxException, IOException, InterruptedException {
-        Gson gson = new Gson();
-
-        HttpRequest getRequest = HttpRequest.newBuilder()
-            .uri(new URI(ENDPOINT))
-            .GET()
-            .build();
-
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        HttpResponse<String> getResponse = httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
-
-        card = gson.fromJson(getResponse.body(), Card.class);
     }
 
     public void sendCardInfo(Long id) {
@@ -174,9 +137,10 @@ public class CardDatabase extends TelegramLongPollingBot {
         }
     }
 
-    public void startSearch(Long id, String endpoint) {
+    public void startSearch(Long id) throws TelegramApiException {
         try {
-            httpRequest(endpoint);
+            httpHandler.httpRequest();
+            card = httpHandler.getCard();
 
             /*
              * If a card is already present in the database send the card image to the user,
@@ -193,7 +157,7 @@ public class CardDatabase extends TelegramLongPollingBot {
 
             sendCardInfo(id);
         } catch (Exception e) {
-            sendErrorMessage(id);
+            execute(httpHandler.sendErrorMessage(id));
             e.printStackTrace();
         }
     }
@@ -212,49 +176,6 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendSearchInstructions);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /*
-     * This method generates the final part of the endpoint URL
-     * creating a String with "%20" instead of spaces.
-     */
-    public String parameterGenerator(String[] messageComponents) {
-        StringBuilder parameter = new StringBuilder();
-
-        if (messageComponents.length > 1) {
-            for (int i = 0; i < messageComponents.length - 1; i++) {
-                parameter.append(messageComponents[i]).append("%20");
-            }
-        }
-
-        parameter.append(messageComponents[messageComponents.length - 1]);
-
-        /*
-         * Some cards contain double quotes in their name (e.g. Maxx "C"),
-         * therefore it's necessary to replace those quotes with their percent-encoding equivalent (%22)
-         * in order to avoid a URISyntaxException.
-         */
-
-        if (parameter.toString().contains("\"")) {
-            return parameter.toString().replace("\"", "%22");
-        }
-
-        return parameter.toString();
-    }
-
-    public void sendErrorMessage(Long id) {
-        String errorMessage = "Card not found! Make sure you searched the exact name on the card.";
-
-        SendMessage sendCardMessage = new SendMessage();
-        sendCardMessage.setChatId(id.toString());
-        sendCardMessage.setParseMode("html");
-        sendCardMessage.setText(errorMessage);
-
-        try {
-            execute(sendCardMessage);
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }

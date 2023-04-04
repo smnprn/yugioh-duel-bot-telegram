@@ -5,6 +5,7 @@
 
 package org.smnrpn.lifepoints;
 
+import org.smnrpn.controllers.LifePointsDBHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,7 +16,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
     private LifePointsDBHandler lifePointsHandler = new LifePointsDBHandler();
 
     private JedisPooled checkLPCommand = new JedisPooled("localhost", 6379);
-    private JedisPooled timesCounterDisplayed = new JedisPooled("localhost", 6379);
+    private JedisPooled wasCounterDisplayed = new JedisPooled("localhost", 6379);
 
 
     @Override
@@ -37,7 +38,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
         if (message.isCommand()) {
             if (message.getText().equals("/lifepoints")) {
                 checkLPCommand.hset("checkLPCommand", id.toString(), "true");
-                timesCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
+                wasCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
 
                 if (!lifePointsHandler.isPresent(id)) {
                     lifePointsHandler.addUser(id);
@@ -66,7 +67,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
         String[] messageComponents = message.getText().split(" ");
 
         if (checkLPCommand.hget("checkLPCommand", id.toString()).equals("true")) {                     // If the user used /lifepoints...
-            if (timesCounterDisplayed.hget("timesCounterDisplayed", id.toString()).equals("true")) {   //...and the LP counter was already displayed at least once
+            if (wasCounterDisplayed.hget("timesCounterDisplayed", id.toString()).equals("true")) {     //...and the LP counter was already displayed at least once
 
                 /*
                  * There's a chance the user won't input a valid command,
@@ -85,7 +86,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
             }
 
             displayLP(id);
-            timesCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "true");
+            wasCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "true");
         }
     }
 
@@ -186,7 +187,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
 
     public void resetCounter(Long id) {
         checkLPCommand.hset("checkLPCommand", id.toString(), "false");
-        timesCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
+        wasCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
         lifePointsHandler.setUserLP(id, 8000);
         lifePointsHandler.setOpponentLP(id, 8000);
     }

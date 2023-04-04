@@ -4,6 +4,7 @@ import org.smnrpn.database.CardDatabase;
 import org.smnrpn.global.GlobalCommands;
 import org.smnrpn.lifepoints.LifePointsCounter;
 import org.smnrpn.links.UsefulLinks;
+import org.smnrpn.prices.Prices;
 import org.smnrpn.roll.RollDice;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,6 +15,7 @@ public class Bot extends TelegramLongPollingBot {
     RollDice rollDice = new RollDice();
     LifePointsCounter lifePointsCounter = new LifePointsCounter();
     CardDatabase cardDatabase = new CardDatabase();
+    Prices cardPrices = new Prices();
 
     @Override
     public String getBotUsername() {
@@ -32,5 +34,6 @@ public class Bot extends TelegramLongPollingBot {
         rollDice.onUpdateReceived(update);
         lifePointsCounter.onUpdateReceived(update);
         cardDatabase.onUpdateReceived(update);
+        cardPrices.onUpdateReceived(update);
     }
 }

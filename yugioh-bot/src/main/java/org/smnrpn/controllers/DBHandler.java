@@ -1,4 +1,4 @@
-package org.smnrpn;
+package org.smnrpn.controllers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
