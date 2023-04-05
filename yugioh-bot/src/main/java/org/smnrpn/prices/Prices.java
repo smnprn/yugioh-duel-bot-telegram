@@ -91,6 +91,24 @@ public class Prices extends TelegramLongPollingBot {
     public String displaySetsInfo() {
         String setInfo = "";
 
+        /*
+         * "Dark Magician" and "Blue-Eyes White Dragon" are the most famous and
+         * most printed cards in the game. They have so many printings that is
+         * necessary to limit how many the bot can show, otherwise the message
+         * would break the Telegram maximum size.
+         */
+        if (card.getName().equalsIgnoreCase("Dark Magician") ||
+            card.getName().equalsIgnoreCase("Blue-Eyes White Dragon")) {
+
+            for (int i = 0; i < 54; i ++) {
+                setInfo += "<i>" + card.getSetNames().get(i) + "</i>" + "\n" +
+                        card.getSetCodes().get(i) + " - " + card.getSetRarities().get(i) + "\n" +
+                        "<b>Price:</b> " + card.getSetPrices().get(i) + "$" + "\n\n";
+            }
+
+            return setInfo;
+        }
+
         for (int i = 0; i < card.getSetNames().size(); i ++) {
             setInfo += "<i>" + card.getSetNames().get(i) + "</i>" + "\n" +
                         card.getSetCodes().get(i) + " - " + card.getSetRarities().get(i) + "\n" +

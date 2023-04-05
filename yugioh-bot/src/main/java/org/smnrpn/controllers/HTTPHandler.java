@@ -79,9 +79,17 @@ public class HTTPHandler {
             return parameter.toString().replace("\"", "");
         }
 
-        // Cardmarket URLs can't contain columns
+        // Cardmarket URLs can't contain columns, hyphens or commas
         if (parameter.toString().contains(":")) {
             return parameter.toString().replace(":", "");
+        }
+
+        if (parameter.toString().contains("--")) {
+            return parameter.toString().replace("--", "");
+        }
+
+        if (parameter.toString().contains(",")) {
+            return parameter.toString().replace(",", "");
         }
 
         return parameter.toString();
