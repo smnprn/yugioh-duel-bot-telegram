@@ -3,7 +3,7 @@ package org.smnrpn.handlers;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class DBHandler {
+public abstract class DBHandler {
     private final String URL = System.getenv("CARD_DB_URL");
     private final String USER = System.getenv("CARD_DB_USER");
     private final String PASSWORD = System.getenv("CARD_DB_PASSWORD");

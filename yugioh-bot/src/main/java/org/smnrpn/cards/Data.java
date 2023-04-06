@@ -21,7 +21,6 @@ public class Data {
     private int linkval;
     private String[] linkmarkers;
 
-
     // Additional response for pendulum monsters
     private int scale;
 

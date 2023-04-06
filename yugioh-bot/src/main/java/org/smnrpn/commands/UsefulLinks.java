@@ -42,16 +42,16 @@ public class UsefulLinks extends TelegramLongPollingBot {
         String LINE_BREAK = "\n\n";
 
         String startMessage = "Here's a list of useful links:" + LINE_BREAK +
-                "<b>Yu-Gi-Oh! Card Database</b>\n" + "<i>The official Yu-Gi-Oh! card database by Konami</i>\n" +
-                "To find all the information you need about every card in the game." + LINE_BREAK +
-                "<b>YGOPRODECK</b>\n" + "<i>A Yu-Gi-Oh! community</i>\n" +
-                "Here you can find many decklists, a pack opener simulator and other useful things." + LINE_BREAK +
-                "<b>Yugipedia</b>\n" + "<i>A fan-made wiki for Yu-Gi-Oh!</i>\n" +
-                "A free repository on every aspect of the franchise." + LINE_BREAK +
-                "<b>Cardmarket</b>\n" + "<i>A site to sell and buy cards</i>\n" +
-                "Europe's largest online marketplace for TCGs!" + LINE_BREAK +
-                "<b>TCGPlayer</b>\n" + "<i>Another site for sell and buy cards</i>\n" +
-                "The largest online TCGs marketplace in the US.";
+                              "<b>Yu-Gi-Oh! Card Database</b>\n" + "<i>The official Yu-Gi-Oh! card database by Konami</i>\n" +
+                              "To find all the information you need about every card in the game." + LINE_BREAK +
+                              "<b>YGOPRODECK</b>\n" + "<i>A Yu-Gi-Oh! community</i>\n" +
+                              "Here you can find many decklists, a pack opener simulator and other useful things." + LINE_BREAK +
+                              "<b>Yugipedia</b>\n" + "<i>A fan-made wiki for Yu-Gi-Oh!</i>\n" +
+                              "A free repository on every aspect of the franchise." + LINE_BREAK +
+                              "<b>Cardmarket</b>\n" + "<i>A site to sell and buy cards</i>\n" +
+                              "Europe's largest online marketplace for TCGs!" + LINE_BREAK +
+                              "<b>TCGPlayer</b>\n" + "<i>Another site for sell and buy cards</i>\n" +
+                              "The largest online TCGs marketplace in the US.";
 
         SendMessage sendLinksMessage = new SendMessage();
         sendLinksMessage.setChatId(id.toString());

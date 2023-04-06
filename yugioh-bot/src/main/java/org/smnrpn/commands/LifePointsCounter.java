@@ -38,7 +38,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
         if (message.isCommand()) {
             if (message.getText().equals("/lifepoints")) {
                 checkLPCommand.hset("checkLPCommand", id.toString(), "true");
-                wasCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
+                wasCounterDisplayed.hset("wasCounterDisplayed", id.toString(), "false");
 
                 if (!lifePointsHandler.isPresent(id)) {
                     lifePointsHandler.addUser(id);
@@ -67,7 +67,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
         String[] messageComponents = message.getText().split(" ");
 
         if (checkLPCommand.hget("checkLPCommand", id.toString()).equals("true")) {                     // If the user used /lifepoints...
-            if (wasCounterDisplayed.hget("timesCounterDisplayed", id.toString()).equals("true")) {     //...and the LP counter was already displayed at least once
+            if (wasCounterDisplayed.hget("wasCounterDisplayed", id.toString()).equals("true")) {     //...and the LP counter was already displayed at least once
 
                 /*
                  * There's a chance the user won't input a valid command,
@@ -86,7 +86,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
             }
 
             displayLP(id);
-            wasCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "true");
+            wasCounterDisplayed.hset("wasCounterDisplayed", id.toString(), "true");
         }
     }
 
@@ -187,14 +187,13 @@ public class LifePointsCounter extends TelegramLongPollingBot {
 
     public void resetCounter(Long id) {
         checkLPCommand.hset("checkLPCommand", id.toString(), "false");
-        wasCounterDisplayed.hset("timesCounterDisplayed", id.toString(), "false");
+        wasCounterDisplayed.hset("wasCounterDisplayed", id.toString(), "false");
         lifePointsHandler.setUserLP(id, 8000);
         lifePointsHandler.setOpponentLP(id, 8000);
     }
 
     public void sendErrorMessage(Long id) {
-        SendMessage sendErrorMessage = new SendMessage(id.toString(), "Not a valid input, try again!\n" +
-                                                                            "If you need, use /help");
+        SendMessage sendErrorMessage = new SendMessage(id.toString(), "Not a valid input, try again!\n" + "If you need, use /help");
 
         try {
             execute(sendErrorMessage);
