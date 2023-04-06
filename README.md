@@ -19,17 +19,17 @@
 <!-- About -->
 ## About the project
 <br/>
-<center>
+<div align="center">
 
 ![Bot Preview][preview-image]
 
-</center>
+</div>
 
 There are many useful apps and websites that help duelists, but they always require to install something on your device and continuously switch from one tool to another. The Yu-Gi-Oh! Duel Bot gives you everything you need in one place without the need to install anything more!
 
 Now you can:
 * Search inside the card database.
-* Search card prices.
+* Search for card prices.
 * Keep count of the life points during the duel.
 * Roll a die to choose who go first.
 * Have quick access to some of the most popular websites.
@@ -73,11 +73,11 @@ The bot currently supports seven commands:
 <br>
 </br>
 
-<center>
+<div align="center">
 
 ![Database Function Preview][database-image]
 
-</center>
+</div>
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
