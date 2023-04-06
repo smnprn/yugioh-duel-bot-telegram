@@ -1,4 +1,4 @@
-package org.smnrpn.database;
+package org.smnrpn.cards;
 
 import org.smnrpn.cards.Card;
 

@@ -1,6 +1,4 @@
-package org.smnrpn.controllers;
-
-import org.smnrpn.controllers.DBHandler;
+package org.smnrpn.handlers;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

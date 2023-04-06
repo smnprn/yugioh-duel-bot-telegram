@@ -4,11 +4,12 @@
  * More info at: https://ygoprodeck.com/api-guide/
  */
 
-package org.smnrpn.database;
+package org.smnrpn.commands;
 
 import org.smnrpn.cards.Card;
-import org.smnrpn.controllers.HTTPHandler;
-import org.smnrpn.controllers.ImagesDBHandler;
+import org.smnrpn.cards.CardInfo;
+import org.smnrpn.handlers.HTTPHandler;
+import org.smnrpn.handlers.ImagesDBHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;

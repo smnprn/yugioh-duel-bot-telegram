@@ -62,7 +62,7 @@ The bot currently supports seven commands:
 * /start - Shows  a welcome message with links to the official project page, this GitHub repository and Ko-Fi.
 * /help - Explains the commands and shows a button to report a bug.
 * /database - Searches in the card database. The bot sends a message with the card image and every info on the card.
-* /prices - Searches card prices on TCGPlayer and other marketplaces.
+* /prices - Searches for card prices on TCGPlayer and other marketplaces.
 * /roll - Rolls a die.
 * /lifepoints - Starts a life points counter. The user can modify the LP by typing "me", "op" or "both" followed by a space and a positive or negative number. 
   

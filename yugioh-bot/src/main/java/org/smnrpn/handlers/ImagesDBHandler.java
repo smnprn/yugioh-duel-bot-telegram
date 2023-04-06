@@ -4,9 +4,7 @@
  * and add card id, name and image path to a PostgreSQL database.
  */
 
-package org.smnrpn.controllers;
-
-import org.smnrpn.controllers.DBHandler;
+package org.smnrpn.handlers;
 
 import java.sql.*;
 

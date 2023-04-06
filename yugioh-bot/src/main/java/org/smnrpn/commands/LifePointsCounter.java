@@ -3,9 +3,9 @@
  * More info at: https://yugioh.fandom.com/wiki/LP
  */
 
-package org.smnrpn.lifepoints;
+package org.smnrpn.commands;
 
-import org.smnrpn.controllers.LifePointsDBHandler;
+import org.smnrpn.handlers.LifePointsDBHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;

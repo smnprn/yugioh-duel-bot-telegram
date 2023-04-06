@@ -3,7 +3,7 @@
  * asks to support in every bot: /start and /help.
  */
 
-package org.smnrpn.global;
+package org.smnrpn.commands;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

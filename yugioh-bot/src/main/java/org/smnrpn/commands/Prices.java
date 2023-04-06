@@ -1,6 +1,6 @@
-package org.smnrpn.prices;
+package org.smnrpn.commands;
 
-import org.smnrpn.controllers.HTTPHandler;
+import org.smnrpn.handlers.HTTPHandler;
 import org.smnrpn.cards.Card;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

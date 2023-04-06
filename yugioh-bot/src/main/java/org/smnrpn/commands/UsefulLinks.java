@@ -2,7 +2,7 @@
  * This class implements a list of useful links for Yu-Gi-Oh! players.
  */
 
-package org.smnrpn.links;
+package org.smnrpn.commands;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

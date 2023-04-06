@@ -1,4 +1,4 @@
-package org.smnrpn.controllers;
+package org.smnrpn.handlers;
 
 /*
  * This class handles http requests, generates parameters for the endpoints
