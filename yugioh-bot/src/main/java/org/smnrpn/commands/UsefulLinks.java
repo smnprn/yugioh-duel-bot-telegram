@@ -4,15 +4,12 @@
 
 package org.smnrpn.commands;
 
+import org.smnrpn.InlineKeyboardCreator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class UsefulLinks extends TelegramLongPollingBot {
     @Override
@@ -63,47 +60,21 @@ public class UsefulLinks extends TelegramLongPollingBot {
         try {
             execute(sendLinksMessage);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
     public InlineKeyboardMarkup createInlineKeyboard() {
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup(); // Create the Inline Keyboard Markup
-        List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>(); // Create the Inline Keyboard
-        List<InlineKeyboardButton> keyboardButtonsFirstRow = new ArrayList<>(); // Create a row of buttons
-        List<InlineKeyboardButton> keyboardButtonsSecondRow = new ArrayList<>();
-        List<InlineKeyboardButton> keyboardButtonsThirdRow = new ArrayList<>();
+        InlineKeyboardCreator inlineKeyboardCreator = new InlineKeyboardCreator();
 
-        // Create buttons
-        InlineKeyboardButton yugiohDB = new InlineKeyboardButton("Official Yu-Gi-Oh! Card Database");
-        yugiohDB.setUrl("https://www.db.yugioh-card.com/yugiohdb/?request_locale=en");
+        inlineKeyboardCreator.createRows(3);
 
-        InlineKeyboardButton ygoProDeck = new InlineKeyboardButton("YGOPRODECK");
-        ygoProDeck.setUrl("https://ygoprodeck.com/");
+        inlineKeyboardCreator.createButton("Official Yu-Gi-Oh! Card Database", "https://www.db.yugioh-card.com/yugiohdb/?request_locale=en", 1);
+        inlineKeyboardCreator.createButton("YGOPRODECK", "https://ygoprodeck.com/", 2);
+        inlineKeyboardCreator.createButton("Yugipedia", "https://yugipedia.com/wiki/Yugipedia", 2);
+        inlineKeyboardCreator.createButton("Cardmarket", "https://www.cardmarket.com/en", 3);
+        inlineKeyboardCreator.createButton("TCGPlayer", "https://www.tcgplayer.com/", 3);
 
-        InlineKeyboardButton yugipedia = new InlineKeyboardButton("Yugipedia");
-        yugipedia.setUrl("https://yugipedia.com/wiki/Yugipedia");
-
-        InlineKeyboardButton cardmarket = new InlineKeyboardButton("Cardmarket");
-        cardmarket.setUrl("https://www.cardmarket.com/en");
-
-        InlineKeyboardButton tcgPlayer = new InlineKeyboardButton("TCGPlayer");
-        tcgPlayer.setUrl("https://www.tcgplayer.com/");
-
-        markupInline.setKeyboard(inlineKeyboard); // Add the keyboard to the markup
-
-        // Add the rows to the keyboard
-        inlineKeyboard.add(keyboardButtonsFirstRow);
-        inlineKeyboard.add(keyboardButtonsSecondRow);
-        inlineKeyboard.add(keyboardButtonsThirdRow);
-
-        // Add the buttons to the row
-        keyboardButtonsFirstRow.add(yugiohDB);
-        keyboardButtonsSecondRow.add(ygoProDeck);
-        keyboardButtonsSecondRow.add(yugipedia);
-        keyboardButtonsThirdRow.add(cardmarket);
-        keyboardButtonsThirdRow.add(tcgPlayer);
-
-        return markupInline;
+        return  inlineKeyboardCreator.getMarkupInline();
     }
 }

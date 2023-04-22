@@ -5,15 +5,12 @@
 
 package org.smnrpn.commands;
 
+import org.smnrpn.InlineKeyboardCreator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GlobalCommands extends TelegramLongPollingBot {
     private final String LINE_BREAK = "\n\n";
@@ -92,50 +89,24 @@ public class GlobalCommands extends TelegramLongPollingBot {
     }
 
     public InlineKeyboardMarkup createStartInlineKeyboard() {
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup(); // Create the Inline Keyboard Markup
-        List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>(); // Create the Inline Keyboard
-        List<InlineKeyboardButton> keyboardButtonsFirstRow = new ArrayList<>(); // Create a row of buttons
-        List<InlineKeyboardButton> keyboardButtonsSecondRow = new ArrayList<>();
+        InlineKeyboardCreator inlineKeyboardCreator = new InlineKeyboardCreator();
 
-        // Create buttons
-        InlineKeyboardButton projectPage = new InlineKeyboardButton("Yu-Gi-Oh! Duel Bot official page");
-        projectPage.setUrl("https://github.com/smnprn");
+        inlineKeyboardCreator.createRows(2);
 
-        InlineKeyboardButton gitHub = new InlineKeyboardButton("GitHub  \uD83D\uDDA5");
-        gitHub.setUrl("https://github.com/smnprn/yugioh-duel-bot-telegram");
+        inlineKeyboardCreator.createButton("Yu-Gi-Oh! Duel Bot official page", "https://github.com/smnprn", 1);
+        inlineKeyboardCreator.createButton("GitHub  \uD83D\uDDA5", "https://github.com/smnprn/yugioh-duel-bot-telegram", 2);
+        inlineKeyboardCreator.createButton("Donate \uD83D\uDCB0", "https://ko-fi.com/", 2);
 
-        InlineKeyboardButton donate = new InlineKeyboardButton("Donate \uD83D\uDCB0");
-        donate.setUrl("https://ko-fi.com/");
-
-        markupInline.setKeyboard(inlineKeyboard); // Add the keyboard to the markup
-
-        // Add the rows to the keyboard
-        inlineKeyboard.add(keyboardButtonsFirstRow);
-        inlineKeyboard.add(keyboardButtonsSecondRow);
-
-        // Add the buttons to the row
-        keyboardButtonsFirstRow.add(projectPage);
-        keyboardButtonsSecondRow.add(gitHub);
-        keyboardButtonsSecondRow.add(donate);
-
-        return markupInline;
+        return inlineKeyboardCreator.getMarkupInline();
     }
 
     public InlineKeyboardMarkup createHelpInlineKeyboard() {
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
-        List<InlineKeyboardButton> keyboardButtonsFirstRow = new ArrayList<>();
+        InlineKeyboardCreator inlineKeyboardCreator = new InlineKeyboardCreator();
 
-        // Create button
-        InlineKeyboardButton reportBug = new InlineKeyboardButton("Report a bug \uD83E\uDEB2");
-        reportBug.setUrl("https://github.com/smnprn/yugioh-duel-bot-telegram/issues");
+        inlineKeyboardCreator.createRows(1);
 
-        markupInline.setKeyboard(inlineKeyboard);
+        inlineKeyboardCreator.createButton("Report a bug \uD83E\uDEB2", "https://github.com/smnprn/yugioh-duel-bot-telegram/issues", 1);
 
-        inlineKeyboard.add(keyboardButtonsFirstRow);
-
-        keyboardButtonsFirstRow.add(reportBug);
-
-        return markupInline;
+        return inlineKeyboardCreator.getMarkupInline();
     }
 }

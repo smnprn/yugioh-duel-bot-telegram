@@ -2,16 +2,13 @@ package org.smnrpn.commands;
 
 import org.smnrpn.handlers.HTTPHandler;
 import org.smnrpn.cards.Card;
+import org.smnrpn.InlineKeyboardCreator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import redis.clients.jedis.JedisPooled;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Prices extends TelegramLongPollingBot {
     private JedisPooled checkPricesCommand = new JedisPooled("localhost", 6379);
@@ -143,24 +140,14 @@ public class Prices extends TelegramLongPollingBot {
     }
 
     public InlineKeyboardMarkup createMarketplacesKeyboard() {
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> inlineKeyboard = new ArrayList<>();
-        List<InlineKeyboardButton> keyboardButtons = new ArrayList<>();
+        InlineKeyboardCreator inlineKeyboardCreator = new InlineKeyboardCreator();
 
-        InlineKeyboardButton cardmarketButton = new InlineKeyboardButton("Cardmarket");
-        cardmarketButton.setUrl("https://www.cardmarket.com/en/YuGiOh/Cards/" + httpHandler.cardmarketParameterGenerator(messageComponents));
+        inlineKeyboardCreator.createRows(1);
 
-        InlineKeyboardButton tcgplayerButton = new InlineKeyboardButton("TCGPlayer");
-        tcgplayerButton.setUrl("https://www.tcgplayer.com/search/yugioh/product?productName=" + httpHandler.tcgplayerParameterGenerator(messageComponents)
-                                + "&productLineName=yugioh&Language=English&view=grid");
+        inlineKeyboardCreator.createButton("Cardmarket", "https://www.cardmarket.com/en/YuGiOh/Cards/" + httpHandler.cardmarketParameterGenerator(messageComponents), 1);
+        inlineKeyboardCreator.createButton("TCGPlayer", "https://www.tcgplayer.com/search/yugioh/product?productName=" + httpHandler.tcgplayerParameterGenerator(messageComponents)
+                                            + "&productLineName=yugioh&Language=English&view=grid", 1);
 
-        markupInline.setKeyboard(inlineKeyboard);
-
-        inlineKeyboard.add(keyboardButtons);
-
-        keyboardButtons.add(cardmarketButton);
-        keyboardButtons.add(tcgplayerButton);
-
-        return markupInline;
+        return inlineKeyboardCreator.getMarkupInline();
     }
 }
