@@ -1,4 +1,4 @@
-package org.smnrpn.handlers;
+package org.smnprn.handlers;
 
 /*
  * This class handles http requests, generates parameters for the endpoints
@@ -6,7 +6,8 @@ package org.smnrpn.handlers;
  */
 
 import com.google.gson.Gson;
-import org.smnrpn.cards.Card;
+import org.apache.log4j.Logger;
+import org.smnprn.cards.Card;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class HTTPHandler {
+    private final Logger logger = Logger.getLogger(HTTPHandler.class);
     private Card card;
     // This is the actual endpoint used to retrieve data.
     String ENDPOINT;

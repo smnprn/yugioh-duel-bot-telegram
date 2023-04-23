@@ -1,4 +1,4 @@
-package org.smnrpn.cards;
+package org.smnprn.cards;
 
 /*
  * This class is used along the Data and the other classes in this package

@@ -3,9 +3,10 @@
  * asks to support in every bot: /start and /help.
  */
 
-package org.smnrpn.commands;
+package org.smnprn.commands;
 
-import org.smnrpn.InlineKeyboardCreator;
+import org.apache.log4j.Logger;
+import org.smnprn.InlineKeyboardCreator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,6 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class GlobalCommands extends TelegramLongPollingBot {
+    private final Logger logger = Logger.getLogger(GlobalCommands.class);
+
     private final String LINE_BREAK = "\n\n";
 
     @Override
@@ -57,7 +60,7 @@ public class GlobalCommands extends TelegramLongPollingBot {
         try {
             execute(sendStartMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -84,7 +87,7 @@ public class GlobalCommands extends TelegramLongPollingBot {
         try {
             execute(sendHelpMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

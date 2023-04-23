@@ -1,12 +1,14 @@
-package org.smnrpn.handlers;
+package org.smnprn.handlers;
 
 import org.apache.log4j.Logger;
+import org.smnprn.main.Main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public abstract class DBHandler {
+    private final Logger logger = Logger.getLogger(DBHandler.class);
     private final String URL = System.getenv("CARD_DB_URL");
     private final String USER = System.getenv("CARD_DB_USER");
     private final String PASSWORD = System.getenv("CARD_DB_PASSWORD");
@@ -17,7 +19,7 @@ public abstract class DBHandler {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return connection;

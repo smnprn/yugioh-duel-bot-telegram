@@ -1,6 +1,4 @@
-package org.smnrpn.cards;
-
-import org.smnrpn.cards.Card;
+package org.smnprn.cards;
 
 import java.util.Arrays;
 

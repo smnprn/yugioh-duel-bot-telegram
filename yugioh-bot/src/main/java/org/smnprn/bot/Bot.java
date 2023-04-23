@@ -1,11 +1,11 @@
-package org.smnrpn.bot;
+package org.smnprn.bot;
 
-import org.smnrpn.commands.CardDatabase;
-import org.smnrpn.commands.GlobalCommands;
-import org.smnrpn.commands.LifePointsCounter;
-import org.smnrpn.commands.UsefulLinks;
-import org.smnrpn.commands.Prices;
-import org.smnrpn.commands.RollDice;
+import org.smnprn.commands.CardDatabase;
+import org.smnprn.commands.GlobalCommands;
+import org.smnprn.commands.LifePointsCounter;
+import org.smnprn.commands.UsefulLinks;
+import org.smnprn.commands.Prices;
+import org.smnprn.commands.RollDice;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

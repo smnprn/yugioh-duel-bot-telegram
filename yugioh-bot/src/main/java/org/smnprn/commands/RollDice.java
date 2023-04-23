@@ -4,14 +4,17 @@
  */
 
 
-package org.smnrpn.commands;
+package org.smnprn.commands;
 
+import org.apache.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDice;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class RollDice extends TelegramLongPollingBot {
+    private final Logger logger = Logger.getLogger(RollDice.class);
+
     @Override
     public String getBotUsername() {
         return "yugiohdueling_bot";
@@ -42,7 +45,7 @@ public class RollDice extends TelegramLongPollingBot {
         try {
             execute(sendDice);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

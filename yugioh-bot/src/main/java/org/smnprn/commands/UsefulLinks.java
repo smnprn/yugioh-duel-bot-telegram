@@ -2,9 +2,12 @@
  * This class implements a list of useful links for Yu-Gi-Oh! players.
  */
 
-package org.smnrpn.commands;
+package org.smnprn.commands;
 
-import org.smnrpn.InlineKeyboardCreator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+import org.slf4j.event.Level;
+import org.smnprn.InlineKeyboardCreator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,6 +15,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class UsefulLinks extends TelegramLongPollingBot {
+    private final Logger logger = Logger.getLogger(UsefulLinks.class);
+
     @Override
     public String getBotUsername() {
         return "yugiohdueling_bot";
@@ -60,7 +65,7 @@ public class UsefulLinks extends TelegramLongPollingBot {
         try {
             execute(sendLinksMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

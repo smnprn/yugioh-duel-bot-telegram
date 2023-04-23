@@ -4,12 +4,13 @@
  * More info at: https://ygoprodeck.com/api-guide/
  */
 
-package org.smnrpn.commands;
+package org.smnprn.commands;
 
-import org.smnrpn.cards.Card;
-import org.smnrpn.cards.CardInfo;
-import org.smnrpn.handlers.HTTPHandler;
-import org.smnrpn.handlers.ImagesDBHandler;
+import org.apache.log4j.Logger;
+import org.smnprn.cards.Card;
+import org.smnprn.cards.CardInfo;
+import org.smnprn.handlers.HTTPHandler;
+import org.smnprn.handlers.ImagesDBHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -22,11 +23,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 public class CardDatabase extends TelegramLongPollingBot {
+    private final Logger logger = Logger.getLogger(CardDatabase.class);
     private Card card;
 
     private HTTPHandler httpHandler = new HTTPHandler();
@@ -80,7 +81,7 @@ public class CardDatabase extends TelegramLongPollingBot {
             try {
                 startSearch(id);
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -120,7 +121,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -137,7 +138,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendCardImage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -152,19 +153,19 @@ public class CardDatabase extends TelegramLongPollingBot {
              */
 
             if (database.isPresent(card.getId())) {
-                System.out.println(database.getImagePath(card.getId()) + " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 sendCardImage(id);
             } else {
                 downloadImg();
                 database.addCard(card.getId(), card.getName(), "assets/" + card.getId() + ".jpg");
-                System.out.println(database.getImagePath(card.getId()) + " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 sendCardImage(id);
             }
 
             sendCardInfo(id);
         } catch (URISyntaxException | IOException | InterruptedException e) {
+            logger.error(e.getMessage());
+        } catch (NullPointerException e) {
             execute(httpHandler.sendErrorMessage(id));
-            e.printStackTrace();
+            logger.info("The card was not found in the YGOPRODECK database");
         }
     }
 
@@ -182,7 +183,7 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             execute(sendSearchInstructions);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -194,7 +195,7 @@ public class CardDatabase extends TelegramLongPollingBot {
 
             ImageIO.write(image, "jpg", file);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

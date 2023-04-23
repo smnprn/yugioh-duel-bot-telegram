@@ -1,4 +1,6 @@
-package org.smnrpn.handlers;
+package org.smnprn.handlers;
+
+import org.apache.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class LifePointsDBHandler extends DBHandler {
+    private final Logger logger = Logger.getLogger(LifePointsDBHandler.class);
+
     public boolean isPresent(Long id) {
         try {
             Statement statement = connect().createStatement();
@@ -23,7 +27,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
     }
@@ -39,7 +43,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -58,7 +62,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             resultSet.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return  userLP;
@@ -79,7 +83,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             resultSet.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return  opponentLP;
@@ -97,7 +101,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -113,7 +117,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -129,7 +133,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -145,7 +149,7 @@ public class LifePointsDBHandler extends DBHandler {
 
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

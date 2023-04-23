@@ -4,11 +4,15 @@
  * and add card id, name and image path to a PostgreSQL database.
  */
 
-package org.smnrpn.handlers;
+package org.smnprn.handlers;
+
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 
 public class ImagesDBHandler extends DBHandler {
+    private final Logger logger = Logger.getLogger(ImagesDBHandler.class);
+
     public boolean isPresent(int cardId) {
         try {
             Statement statement = connect().createStatement();
@@ -26,7 +30,7 @@ public class ImagesDBHandler extends DBHandler {
 
             return false;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
     }
@@ -44,7 +48,7 @@ public class ImagesDBHandler extends DBHandler {
             statement.close();
             resultSet.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return imagePath;
@@ -63,7 +67,7 @@ public class ImagesDBHandler extends DBHandler {
 
             statement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

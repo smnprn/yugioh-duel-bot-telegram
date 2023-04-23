@@ -1,4 +1,4 @@
-package org.smnrpn.cards;
+package org.smnprn.cards;
 
 public class CardPrices {
     private float cardmarket_price;

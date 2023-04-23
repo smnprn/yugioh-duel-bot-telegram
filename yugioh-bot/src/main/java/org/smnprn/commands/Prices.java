@@ -1,8 +1,9 @@
-package org.smnrpn.commands;
+package org.smnprn.commands;
 
-import org.smnrpn.handlers.HTTPHandler;
-import org.smnrpn.cards.Card;
-import org.smnrpn.InlineKeyboardCreator;
+import org.apache.log4j.Logger;
+import org.smnprn.handlers.HTTPHandler;
+import org.smnprn.cards.Card;
+import org.smnprn.InlineKeyboardCreator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class Prices extends TelegramLongPollingBot {
+    private final Logger logger = Logger.getLogger(Prices.class);
+
     private JedisPooled checkPricesCommand = new JedisPooled("localhost", 6379);
     private HTTPHandler httpHandler = new HTTPHandler();
 
@@ -63,7 +66,7 @@ public class Prices extends TelegramLongPollingBot {
                     sendCardPrices(id);
                 }
             } catch (TelegramApiException | URISyntaxException | IOException | InterruptedException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -88,7 +91,7 @@ public class Prices extends TelegramLongPollingBot {
         try {
             execute(sendCardPriceMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -134,7 +137,7 @@ public class Prices extends TelegramLongPollingBot {
         try {
             execute(sendPriceMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -142,7 +145,7 @@ public class Prices extends TelegramLongPollingBot {
         try {
             execute(httpHandler.sendErrorMessage(id));
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

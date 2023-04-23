@@ -1,4 +1,4 @@
-package org.smnrpn.cards;
+package org.smnprn.cards;
 
 public class CardImages {
     private int id;

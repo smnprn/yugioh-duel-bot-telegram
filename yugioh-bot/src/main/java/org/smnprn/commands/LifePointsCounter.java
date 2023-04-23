@@ -3,9 +3,10 @@
  * More info at: https://yugioh.fandom.com/wiki/LP
  */
 
-package org.smnrpn.commands;
+package org.smnprn.commands;
 
-import org.smnrpn.handlers.LifePointsDBHandler;
+import org.apache.log4j.Logger;
+import org.smnprn.handlers.LifePointsDBHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,6 +14,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import redis.clients.jedis.JedisPooled;
 
 public class LifePointsCounter extends TelegramLongPollingBot {
+    private final Logger logger = Logger.getLogger(LifePointsCounter.class);
     private LifePointsDBHandler lifePointsHandler = new LifePointsDBHandler();
 
     private JedisPooled checkLPCommand = new JedisPooled("localhost", 6379);
@@ -84,11 +86,17 @@ public class LifePointsCounter extends TelegramLongPollingBot {
                 } catch (NumberFormatException e) {
                     sendErrorMessage(id);
                     exceptionCaught = true;
+                    logger.info("The second word in the user message is not a number: invalid input");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    sendErrorMessage(id);
+                    exceptionCaught = true;
+                    logger.info("The user message is shorter than two words: invalid input");
                 } finally {
                     if (messageComponents.length == 2 || exceptionCaught) {
                         updateLP(id, value, messageComponents);
                     } else {
                         sendErrorMessage(id);
+                        logger.info("The user message is longer than two words: invalid input");
                     }
                 }
             }
@@ -174,7 +182,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -206,7 +214,7 @@ public class LifePointsCounter extends TelegramLongPollingBot {
         try {
             execute(sendErrorMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }
