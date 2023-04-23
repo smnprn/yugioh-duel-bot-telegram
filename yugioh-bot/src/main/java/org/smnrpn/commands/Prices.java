@@ -145,8 +145,9 @@ public class Prices extends TelegramLongPollingBot {
         inlineKeyboardCreator.createRows(1);
 
         inlineKeyboardCreator.createButton("Cardmarket", "https://www.cardmarket.com/en/YuGiOh/Cards/" + httpHandler.cardmarketParameterGenerator(messageComponents), 1);
-        inlineKeyboardCreator.createButton("TCGPlayer", "https://www.tcgplayer.com/search/yugioh/product?productName=" + httpHandler.tcgplayerParameterGenerator(messageComponents)
-                                            + "&productLineName=yugioh&Language=English&view=grid", 1);
+        inlineKeyboardCreator.createButton("TCGPlayer",
+                                            "https://www.tcgplayer.com/search/yugioh/product?productName=" + httpHandler.tcgplayerParameterGenerator(messageComponents) + "&productLineName=yugioh&Language=English&view=grid",
+                                            1);
 
         return inlineKeyboardCreator.getMarkupInline();
     }

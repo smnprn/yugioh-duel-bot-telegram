@@ -28,7 +28,7 @@ public class InlineKeyboardCreator {
         InlineKeyboardButton button = new InlineKeyboardButton(text);
         button.setUrl(url);
 
-        inlineKeyboard.get(row).add(button);
+        inlineKeyboard.get(row - 1).add(button);
     }
 
     public InlineKeyboardMarkup getMarkupInline() {
