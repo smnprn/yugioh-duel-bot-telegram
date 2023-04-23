@@ -10,6 +10,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import redis.clients.jedis.JedisPooled;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 public class Prices extends TelegramLongPollingBot {
     private JedisPooled checkPricesCommand = new JedisPooled("localhost", 6379);
     private HTTPHandler httpHandler = new HTTPHandler();
@@ -53,9 +56,13 @@ public class Prices extends TelegramLongPollingBot {
             try {
                 httpHandler.httpRequest();
                 card = httpHandler.getCard();
-                sendCardPrices(id);
-            } catch (Exception e) {
-                cardNotFoundMessage(id);
+
+                if (card.getData() == null) {
+                    cardNotFoundMessage(id);
+                } else {
+                    sendCardPrices(id);
+                }
+            } catch (TelegramApiException | URISyntaxException | IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -80,7 +87,7 @@ public class Prices extends TelegramLongPollingBot {
 
         try {
             execute(sendCardPriceMessage);
-        } catch (Exception e) {
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
@@ -126,7 +133,7 @@ public class Prices extends TelegramLongPollingBot {
 
         try {
             execute(sendPriceMessage);
-        } catch (Exception e) {
+        } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }

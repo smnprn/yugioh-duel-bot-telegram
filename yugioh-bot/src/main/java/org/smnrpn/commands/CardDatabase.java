@@ -21,6 +21,9 @@ import redis.clients.jedis.JedisPooled;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class CardDatabase extends TelegramLongPollingBot {
@@ -76,7 +79,7 @@ public class CardDatabase extends TelegramLongPollingBot {
 
             try {
                 startSearch(id);
-            } catch (Exception e) {
+            } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }
@@ -149,15 +152,17 @@ public class CardDatabase extends TelegramLongPollingBot {
              */
 
             if (database.isPresent(card.getId())) {
+                System.out.println(database.getImagePath(card.getId()) + " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 sendCardImage(id);
             } else {
                 downloadImg();
-                database.addCard(card.getId(), card.getName(), "yugioh-bot/assets/" + card.getId() + ".jpg");
+                database.addCard(card.getId(), card.getName(), "assets/" + card.getId() + ".jpg");
+                System.out.println(database.getImagePath(card.getId()) + " !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 sendCardImage(id);
             }
 
             sendCardInfo(id);
-        } catch (Exception e) {
+        } catch (URISyntaxException | IOException | InterruptedException e) {
             execute(httpHandler.sendErrorMessage(id));
             e.printStackTrace();
         }
@@ -185,10 +190,10 @@ public class CardDatabase extends TelegramLongPollingBot {
         try {
             URL url = new URL(card.getImage_url_cropped());
             BufferedImage image = ImageIO.read(url);
-            File file = new File("yugioh-bot/assets/" + card.getId() + ".jpg");
+            File file = new File("assets/" + card.getId() + ".jpg");
 
             ImageIO.write(image, "jpg", file);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

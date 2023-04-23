@@ -57,7 +57,7 @@ public class GlobalCommands extends TelegramLongPollingBot {
         try {
             execute(sendStartMessage);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -84,7 +84,7 @@ public class GlobalCommands extends TelegramLongPollingBot {
         try {
             execute(sendHelpMessage);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 

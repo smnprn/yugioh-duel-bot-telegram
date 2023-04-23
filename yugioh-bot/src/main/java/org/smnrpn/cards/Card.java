@@ -101,4 +101,8 @@ public class Card {
     public ArrayList<Float> getSetPrices() {
         return data[0].getSetPrices();
     }
+
+    public Data[] getData() {
+        return data;
+    }
 }

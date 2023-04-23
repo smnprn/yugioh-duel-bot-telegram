@@ -42,7 +42,7 @@ public class RollDice extends TelegramLongPollingBot {
         try {
             execute(sendDice);
         } catch (TelegramApiException e) {
-            throw  new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

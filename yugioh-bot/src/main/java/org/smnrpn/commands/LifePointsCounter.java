@@ -70,19 +70,27 @@ public class LifePointsCounter extends TelegramLongPollingBot {
             if (wasCounterDisplayed.hget("wasCounterDisplayed", id.toString()).equals("true")) {     //...and the LP counter was already displayed at least once
 
                 /*
-                 * There's a chance the user won't input a valid command,
-                 * so it's necessary to catch the exception and return
-                 * an error message.
+                 * There's a chance the user won't input a valid command in two circumstances:
+                 * the second word in the message is not a number, so it produces a NumberFormatException
+                 * or if the message is longer than two words.
+                 * In both cases the bot sends and error message to the user.
                  */
 
-                try {
-                    int value = Integer.parseInt(messageComponents[1]);
-                    updateLP(id, value, messageComponents);
-                } catch (Exception e) {
-                    sendErrorMessage(id);
-                    e.printStackTrace();
-                }
+                int value = 0;
+                boolean exceptionCaught = false;
 
+                try {
+                    value = Integer.parseInt(messageComponents[1]);
+                } catch (NumberFormatException e) {
+                    sendErrorMessage(id);
+                    exceptionCaught = true;
+                } finally {
+                    if (messageComponents.length == 2 || exceptionCaught) {
+                        updateLP(id, value, messageComponents);
+                    } else {
+                        sendErrorMessage(id);
+                    }
+                }
             }
 
             displayLP(id);

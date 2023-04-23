@@ -25,7 +25,7 @@ public class ImagesDBHandler extends DBHandler {
             resultSet.close();
 
             return false;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -43,7 +43,7 @@ public class ImagesDBHandler extends DBHandler {
 
             statement.close();
             resultSet.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -62,7 +62,7 @@ public class ImagesDBHandler extends DBHandler {
             statement.executeUpdate();
 
             statement.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
