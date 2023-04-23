@@ -6,7 +6,7 @@
 package org.smnprn.commands;
 
 import org.apache.log4j.Logger;
-import org.smnprn.InlineKeyboardCreator;
+import org.smnprn.bot.InlineKeyboardCreator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
