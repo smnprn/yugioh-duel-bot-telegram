@@ -10,12 +10,12 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class Bot extends TelegramLongPollingBot {
-    GlobalCommands globalCommands = new GlobalCommands();
-    UsefulLinks usefulLinks = new UsefulLinks();
-    RollDice rollDice = new RollDice();
-    LifePointsCounter lifePointsCounter = new LifePointsCounter();
-    CardDatabase cardDatabase = new CardDatabase();
-    Prices cardPrices = new Prices();
+    private GlobalCommands globalCommands = new GlobalCommands();
+    private UsefulLinks usefulLinks = new UsefulLinks();
+    private RollDice rollDice = new RollDice();
+    private LifePointsCounter lifePointsCounter = new LifePointsCounter();
+    private CardDatabase cardDatabase = new CardDatabase();
+    private Prices cardPrices = new Prices();
 
     @Override
     public String getBotUsername() {

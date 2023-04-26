@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InlineKeyboardCreator {
-    InlineKeyboardMarkup markupInline;
-    List<List<InlineKeyboardButton>> inlineKeyboard;
+    private InlineKeyboardMarkup markupInline;
+    private List<List<InlineKeyboardButton>> inlineKeyboard;
 
     public InlineKeyboardCreator() {
         this.markupInline = new InlineKeyboardMarkup(); // Create the Inline Keyboard Markup

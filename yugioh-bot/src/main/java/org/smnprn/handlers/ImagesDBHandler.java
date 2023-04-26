@@ -70,4 +70,15 @@ public class ImagesDBHandler extends DBHandler {
             logger.error(e.getMessage());
         }
     }
+
+    public void removeCard(int cardId) {
+        try {
+            Statement statement = connect().createStatement();
+            statement.execute("DELETE FROM cards WHERE id = " + cardId);
+
+            statement.close();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+    }
 }

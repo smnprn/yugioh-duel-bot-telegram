@@ -47,6 +47,17 @@ public class LifePointsDBHandler extends DBHandler {
         }
     }
 
+    public void removeUser(Long userId) {
+        try {
+            Statement statement = connect().createStatement();
+            statement.execute("DELETE FROM lifepoints WHERE id = " + userId);
+
+            statement.close();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+    }
+
     public int getUserLP(Long userId) {
         int userLP = 0;
         String sql = "SELECT user_lp FROM lifepoints WHERE id=?";
